@@ -1,11 +1,10 @@
 import SwiftUI
 import StarRating
 
-
 struct ContentView: View {
     var body: some View {
-        Text(StarRatingText.text)
-            .padding()
+        Star()
+            .stroke(Color.black, lineWidth: 2)            
     }
 }
 
