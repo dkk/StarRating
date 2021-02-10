@@ -1,0 +1,16 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "StarRating",
+        "repositoryURL": "https://github.com/dkk/StarRating",
+        "state": {
+          "branch": "main",
+          "revision": "7c71a88e231e0b60bf435674bd08833725cb1b4c",
+          "version": null
+        }
+      }
+    ]
+  },
+  "version": 1
+}
