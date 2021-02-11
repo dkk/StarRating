@@ -23,7 +23,7 @@ public struct Star: Shape {
         let startingPoint = CGPoint(x: 0, y: -rect.center.y)
         
         var path = Path()
-        path.move(to: startingPoint) // set starting point
+        path.move(to: startingPoint)
         
         var lowestPointY: CGFloat = 0
         
@@ -32,8 +32,10 @@ public struct Star: Shape {
             let point: CGPoint
             
             if vertexIndex % 2 == 0 {
+                //position of next outer point
                 point = CGPoint(x: rect.center.x * unitMovement.x, y: rect.center.y * unitMovement.y)
             } else {
+                //position of next inner point
                 point = CGPoint(x: unitMovement.x * innerPointMovement.dx, y: unitMovement.y * innerPointMovement.dy)
             }
             path.addLine(to: point)
@@ -47,6 +49,7 @@ public struct Star: Shape {
         path.closeSubpath()
         
         let unusedSpace = (rect.height / 2 - lowestPointY) / 2
+        // center the star vertically
         let transform = CGAffineTransform(translationX: rect.center.x, y: rect.center.y + unusedSpace)
         return path.applying(transform)
     }
