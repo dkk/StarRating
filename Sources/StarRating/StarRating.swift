@@ -9,15 +9,15 @@ public struct StarRating: View {
         case empty, half, full
     }
     
-    public var styling: StarRatingStyle
+    public var configuration: StarRatingConfiguration
     
     @State public var rating: Double
     
     public init (
         rating: Double,
-        styling: StarRatingStyle = StarRatingStyle()
+        configuration: StarRatingConfiguration = StarRatingConfiguration()
     ) {
-        self.styling = styling
+        self.configuration = configuration
         
         _rating = State(initialValue: rating)
     }
@@ -25,7 +25,7 @@ public struct StarRating: View {
     private func starFilling(rating: Double) -> StarFilling {
         if rating <= 0 { return .empty }
         
-        switch styling.stepType {
+        switch configuration.stepType {
         case .full:
             return rating >= 1 ? .full : .empty
         case .half:
@@ -36,10 +36,10 @@ public struct StarRating: View {
     }
     
     private func starBorder() -> some View {
-        Star(vertices: styling.starVertices, weight: styling.starWeight)
-            .stroke(styling.borderColor, lineWidth: styling.borderWidth)
+        Star(vertices: configuration.starVertices, weight: configuration.starWeight)
+            .stroke(configuration.borderColor, lineWidth: configuration.borderWidth)
             .aspectRatio(contentMode: .fit)
-            .shadow(color: styling.shadowColor, radius: styling.shadowRadius)
+            .shadow(color: configuration.shadowColor, radius: configuration.shadowRadius)
     }
     
     private func filledStar(filling: StarFilling) -> some View {
@@ -50,26 +50,74 @@ public struct StarRating: View {
         case .full: trimStart = 0.0
         }
         
-        return Star(vertices: styling.starVertices, weight: styling.starWeight)
+        return Star(vertices: configuration.starVertices, weight: configuration.starWeight)
             .trim(from: trimStart, to: 1.0)
             .fill(LinearGradient(
-                gradient: .init(colors: [styling.fillColor1, styling.fillColor2]),
+                gradient: .init(colors: [configuration.fillColor1, configuration.fillColor2]),
                 startPoint: .init(x: 0, y: 0),
                 endPoint: .init(x: 1, y: 1)
             ))
             .aspectRatio(contentMode: .fit)
     }
     
+    public var ratingChanged: (Double) -> Void = {
+        print($0)
+    }
+    
+    private static func halfAStar(width: CGFloat, stars: Int) -> CGFloat {
+        width / CGFloat(stars * 2)
+    }
+    
     public var body: some View {
-        HStack(spacing: styling.spacing) {
-            ForEach((0 ..< styling.numberOfStars), id: \.self) { index in
-                ZStack {
-                    starBorder()
+        GeometryReader { geo in
+            let halfAStar = Self.halfAStar(width: geo.size.width, stars: configuration.numberOfStars)
+            
+            let drag = DragGesture(minimumDistance: 0).onChanged { value in
+                
+                guard value.location.x > (halfAStar * CGFloat(configuration.minRating) * 2) else {
+                    if rating != configuration.minRating {
+                        rating = configuration.minRating
+                        ratingChanged(rating)
+                    }
+                    return
+                }
+                
+                guard value.location.x < geo.size.width - halfAStar else {
+                    let maxRating = Double(configuration.numberOfStars)
+                    if rating != maxRating {
+                        rating = maxRating
+                        ratingChanged(rating)
+                    }
                     
-                    filledStar(filling: starFilling(rating: rating - Double(index)))
-                        .overlay(starBorder())
+                    return
+                }
+                
+                let newRating = Double(CGFloat(configuration.numberOfStars) * (value.location.x - halfAStar) / (geo.size.width - halfAStar * 2))
+                
+                let roundedNewRating: Double
+                switch configuration.stepType{
+                case .half: roundedNewRating = round(newRating * 2.0) / 2.0
+                case.full: roundedNewRating = round(newRating)
+                }
+                
+                if roundedNewRating != rating {
+                    rating = roundedNewRating
+                    ratingChanged(rating)
                 }
             }
+            
+            HStack(spacing: configuration.spacing) {
+                ForEach((0 ..< configuration.numberOfStars), id: \.self) { index in
+                    ZStack {
+                        starBorder()
+                        
+                        filledStar(filling: starFilling(rating: rating - Double(index)))
+                            .overlay(starBorder())
+                    }
+                }
+            }
+            .padding([.leading, .trailing], halfAStar)
+            .gesture(drag)
         }
     }
 }

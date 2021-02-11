@@ -34,8 +34,8 @@ struct ContentView: View {
         }
     }
     
-    var customStarRatingStyle: StarRatingStyle {
-        StarRatingStyle(spacing: 8, numberOfStars: 7, stepType: .full, borderWidth: 1, borderColor: customBorderColor, shadowRadius: 0, fillColor1: .pink, fillColor2: .blue, starVertices: 6, starWeight: 0.6)
+    var customStarRatingConfiguration: StarRatingConfiguration {
+        StarRatingConfiguration(spacing: 8, numberOfStars: 7, stepType: .full, minRating: 1, borderWidth: 1, borderColor: customBorderColor, shadowRadius: 0, fillColor1: .pink, fillColor2: .blue, starVertices: 6, starWeight: 0.6)
     }
     
     var body: some View {
@@ -43,10 +43,10 @@ struct ContentView: View {
             bigStar
                         
             StarRating(rating: 3.7)
-                .padding()
+                .frame(width: 300, height: 50)
             
-            StarRating(rating: 3.7, styling: customStarRatingStyle)
-                .padding()
+            StarRating(rating: 3.7, configuration: customStarRatingConfiguration)
+                .frame(width: 200, height: 50)
         }
     }
 }
