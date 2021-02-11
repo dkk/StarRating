@@ -8,6 +8,10 @@ struct ContentView: View {
         colorScheme == .light ? 0 : 1
     }
     
+    var customBorderColor: Color {
+        colorScheme == .light ? .black : .white
+    }
+    
     var bigStar: some View {
         ZStack {
             Star()
@@ -31,7 +35,7 @@ struct ContentView: View {
     }
     
     var customStarRatingStyle: StarRatingStyle {
-        StarRatingStyle(spacing: 8, numberOfStars: 7, stepType: .full, borderWidth: 1, borderColor: .black, shadowRadius: 0, fillColor1: .pink, fillColor2: .blue, starVertices: 6, starWeight: 0.6)
+        StarRatingStyle(spacing: 8, numberOfStars: 7, stepType: .full, borderWidth: 1, borderColor: customBorderColor, shadowRadius: 0, fillColor1: .pink, fillColor2: .blue, starVertices: 6, starWeight: 0.6)
     }
     
     var body: some View {
@@ -55,6 +59,7 @@ struct ContentView_Previews: PreviewProvider {
                 .previewLayout(.sizeThatFits)
             
             ContentView()
+                .padding()
                 .environment(\.colorScheme, .dark)
                 .background(Color(red: 0.188, green: 0.192, blue: 0.208, opacity: 1.000))
                 .previewLayout(.sizeThatFits)
