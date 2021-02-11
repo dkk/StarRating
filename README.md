@@ -16,12 +16,56 @@ Requirements iOS 13+
 
 #### Swift Package
 ```swift
-.package(url: "https://github.com/dkk/StarRating", .upToNextMajor(from: "0.0.0"))
+.package(url: "https://github.com/dkk/StarRating", .upToNextMajor(from: "1.0.0"))
 ```
 
 ## Usage
 
-TODO
+Import StarRating package to your view.
+
+```swift
+import StarRating
+```
+
+and you are ready to use `StarRating` or the `Shape` `Star` in you SwiftUI code.
+
+#### Use StarRating to display a rating
+You can display a rating with the line:
+```
+// set the rating you want to display as initialRating
+StarRating(initialRating: 3.7) 
+```
+
+#### Use StarRating to get a rating from the user
+To show a fully functional star rating that can handle user input, add the line:
+```
+// set the initialRating
+// add a callback to do something with the new rating
+StarRating(initialRating: 0, onRatingChanged: { print($0) })
+```
+
+#### Configure StarRating
+To configure the control, `StarRating` binds a `StarRatingConfiguration` object. This makes it easy to dynamically change the control's style and behaviour.
+
+1. Create a `StarRatingConfiguration` object:
+```
+@State var customConfig = StarRatingConfiguration(minRating: 2, numberOfStars: 10)
+```
+
+2. Pass it when creating the instance of `StarRating` and update it later as needed:
+```
+StarRating(initialRating: 2.0, configuration: $customConfig) { newRating in
+    customConfig.starVertices = Int(newRating)
+}
+```
+
+Read the implementation of `StarRatingConfiguration` to see what configuration posibilities are available at the moment.
+
+#### Use the Star Shape
+Use `Star` the same way as you would use standard SwiftUI Shapes, such as `Rectangle`. `Star` allows to configure the number of vertices and the weight. Example usage:
+```
+Star(vertices: 5, weight: 0.45)
+```
 
 ## License
 

@@ -21,20 +21,20 @@ public struct StarRating: View {
     private var onRatingChanged: ((Double) -> Void)?
     
     /// - Parameters:
-    ///     - rating: The initial rating value
+    ///     - initialRating: The initial rating value
     ///     - configuration: The configuration of the StarRating control.
     ///                      Allows you to customize style and behaviour
     ///     - onRatingChanged: Gets called when the user changes the rating
     ///                        by tapping or dragging
     public init (
-        rating: Double,
+        initialRating: Double,
         configuration: Binding<StarRatingConfiguration> = .constant(StarRatingConfiguration()),
         onRatingChanged: ((Double) -> Void)? = nil
     ) {
         self.onRatingChanged = onRatingChanged
         
         _configuration = configuration        
-        _rating = State(initialValue: rating)
+        _rating = State(initialValue: initialRating)
     }
     
     private func starFilling(rating: Double) -> StarFilling {
@@ -142,6 +142,6 @@ public struct StarRating: View {
 
 struct StarRating_Previews: PreviewProvider {
     static var previews: some View {
-        StarRating(rating: 2.3)
+        StarRating(initialRating: 2.3)
     }
 }

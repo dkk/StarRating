@@ -4,7 +4,7 @@ import StarRating
 struct ContentView: View {
     var bigStar: some View {
         ZStack {
-            Star()
+            Star(vertices: 5, weight: 0.45)
                 .fill(LinearGradient(
                     gradient: .init(colors: [.pink, .blue]),
                     startPoint: .init(x: 0, y: 0),
@@ -41,14 +41,20 @@ struct ContentView: View {
             bigStar
                    
             // Example of using StarRating with default configuration
-            StarRating(rating: 3.7, onRatingChanged: { print($0) })
+            StarRating(initialRating: 3.7, onRatingChanged: { print($0) })
                 .frame(width: 300, height: 50)
             
             // Example of using StarRating with custom configuration & with live updates
-            StarRating(rating: 2.0, configuration: $customConfig) { newRating in
+            StarRating(initialRating: 2.0, configuration: $customConfig) { newRating in
                 customConfig.starVertices = Int(newRating)
                 customConfig.fillColors = [Color].random
             }
+            
+            Spacer()
+            
+            // Example of using StarRating as display only
+            StarRating(initialRating: 3.7)
+                .frame(width: 300, height: 50)
         }
     }
 }
