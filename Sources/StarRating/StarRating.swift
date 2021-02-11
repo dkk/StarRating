@@ -42,7 +42,7 @@ public struct StarRating: View {
             .shadow(color: styling.shadowColor, radius: styling.shadowRadius)
     }
     
-    private func fiilledStar(filling: StarFilling) -> some View {
+    private func filledStar(filling: StarFilling) -> some View {
         let trimStart: CGFloat
         switch filling {
         case .empty: trimStart = 1.0
@@ -66,7 +66,7 @@ public struct StarRating: View {
                 ZStack {
                     starBorder()
                     
-                    fiilledStar(filling: starFilling(rating: rating - Double(index)))
+                    filledStar(filling: starFilling(rating: rating - Double(index)))
                         .overlay(starBorder())
                 }
             }
