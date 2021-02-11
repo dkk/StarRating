@@ -1,9 +1,14 @@
 import SwiftUI
 
+/// A Shape with the form of Star Polygon
 public struct Star: Shape {
     let vertices: Int
     let weight: CGFloat
     
+    /// - Parameters:
+    ///     - vertices: The numer of vertices of the star (only outer points are counted)
+    ///     - weight: Defines the position of the inner points. 0: inner points == center,
+    ///      1: inner points are at the height of the outer points
     public init(vertices: Int = 5, weight: CGFloat = 0.45) {
         self.vertices = vertices
         self.weight = weight
@@ -36,7 +41,7 @@ public struct Star: Shape {
                 point = CGPoint(x: rect.center.x * unitMovement.x, y: rect.center.y * unitMovement.y)
             } else {
                 //position of next inner point
-                point = CGPoint(x: unitMovement.x * innerPointMovement.dx, y: unitMovement.y * innerPointMovement.dy)
+                point = CGPoint(x: innerPointMovement.dx * unitMovement.x, y: innerPointMovement.dy * unitMovement.y)
             }
             path.addLine(to: point)
             
