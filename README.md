@@ -59,7 +59,7 @@ StarRating(initialRating: 2.0, configuration: $customConfig) { newRating in
 }
 ```
 
-Read the implementation of `StarRatingConfiguration` to see what configuration posibilities are available at the moment.
+Read the implementation of [StarRatingConfiguration](Sources/StarRating/StarRatingConfiguration.swift) to see what configuration posibilities are available at the moment.
 
 ### Use the Star Shape
 Use `Star` the same way as you would use standard SwiftUI Shapes, such as `Rectangle`. `Star` allows to configure the number of vertices and the weight. Example usage:
