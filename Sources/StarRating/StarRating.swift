@@ -56,7 +56,7 @@ public struct StarRating: View {
         return Star(vertices: configuration.starVertices, weight: configuration.starWeight)
             .trim(from: trimStart, to: 1.0)
             .fill(LinearGradient(
-                gradient: .init(colors: [configuration.fillColor1, configuration.fillColor2]),
+                gradient: .init(colors: configuration.fillColors),
                 startPoint: .init(x: 0, y: 0),
                 endPoint: .init(x: 1, y: 1)
             ))

@@ -12,6 +12,7 @@
 		AF487D1E25D44B8400E8B4BD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF487D1D25D44B8400E8B4BD /* Assets.xcassets */; };
 		AF487D2125D44B8400E8B4BD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF487D2025D44B8400E8B4BD /* Preview Assets.xcassets */; };
 		AF487D2B25D44D0500E8B4BD /* StarRating in Frameworks */ = {isa = PBXBuildFile; productRef = AF487D2A25D44D0500E8B4BD /* StarRating */; };
+		AFF91FF925D573380080E1DF /* ColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFF91FF825D573380080E1DF /* ColorExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		AF487D2025D44B8400E8B4BD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		AF487D2225D44B8400E8B4BD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AF487D3225D44EA000E8B4BD /* StarRating */ = {isa = PBXFileReference; lastKnownFileType = folder; name = StarRating; path = ..; sourceTree = "<group>"; };
+		AFF91FF825D573380080E1DF /* ColorExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 		AF487D1825D44B8300E8B4BD /* StarRatingExample */ = {
 			isa = PBXGroup;
 			children = (
+				AFF91FF825D573380080E1DF /* ColorExtension.swift */,
 				AF487D1925D44B8300E8B4BD /* StarRatingExampleApp.swift */,
 				AF487D1B25D44B8300E8B4BD /* ContentView.swift */,
 				AF487D1D25D44B8400E8B4BD /* Assets.xcassets */,
@@ -148,6 +151,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AFF91FF925D573380080E1DF /* ColorExtension.swift in Sources */,
 				AF487D1C25D44B8300E8B4BD /* ContentView.swift in Sources */,
 				AF487D1A25D44B8300E8B4BD /* StarRatingExampleApp.swift in Sources */,
 			);

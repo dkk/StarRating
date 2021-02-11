@@ -1,22 +1,7 @@
 import SwiftUI
 import StarRating
 
-extension Color {
-    struct Example {
-        static var border: Color {
-            Color(.init { $0.userInterfaceStyle == .light ? .black : .white })
-        }
-
-    }
-}
-
 struct ContentView: View {
-    @Environment(\.colorScheme) var colorScheme
-    
-    var shadowWhite: Double {
-        colorScheme == .light ? 0 : 1
-    }
-    
     var bigStar: some View {
         ZStack {
             Star()
@@ -28,7 +13,7 @@ struct ContentView: View {
                 .frame(width: 300, height: 300, alignment: .center)
                 .overlay(Star().stroke(Color.white, lineWidth: 4))
                 .shadow(
-                    color: Color(white: shadowWhite, opacity: 0.33),
+                    color: Color.Example.shadow,
                     radius: 7
                 )
             
@@ -46,27 +31,23 @@ struct ContentView: View {
                                                       borderWidth: 1,
                                                       borderColor: Color.Example.border,
                                                       shadowRadius: 0,
-                                                      fillColor1: .pink,
-                                                      fillColor2: .blue,
+                                                      fillColors: [Color].random,
                                                       starVertices: 6,
                                                       starWeight: 0.6)
     
     var body: some View {
         VStack {
+            // Example of using the Star Shape
             bigStar
                    
-            // standard
+            // Example of using StarRating with default configuration
             StarRating(rating: 3.7, onRatingChanged: { print($0) })
                 .frame(width: 300, height: 50)
             
-            // custom & with live update
-            StarRating(rating: 3.7, configuration: $customConfig) { newRating in
-                if newRating == 0 {
-                    customConfig.starVertices = Int(newRating)
-                } else {
-                    customConfig.starVertices = Int(newRating)
-                }
-                
+            // Example of using StarRating with custom configuration & with live updates
+            StarRating(rating: 2.0, configuration: $customConfig) { newRating in
+                customConfig.starVertices = Int(newRating)
+                customConfig.fillColors = [Color].random
             }
         }
     }
