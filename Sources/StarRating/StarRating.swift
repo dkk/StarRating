@@ -9,16 +9,19 @@ public struct StarRating: View {
         case empty, half, full
     }
     
-    public var configuration: StarRatingConfiguration
-    
+    @Binding public var configuration: StarRatingConfiguration
     @State public var rating: Double
+    
+    private var onRatingChanged: ((Double) -> Void)?
     
     public init (
         rating: Double,
-        configuration: StarRatingConfiguration = StarRatingConfiguration()
+        configuration: Binding<StarRatingConfiguration> = .constant(StarRatingConfiguration()),
+        onRatingChanged: ((Double) -> Void)? = nil
     ) {
-        self.configuration = configuration
+        self.onRatingChanged = onRatingChanged
         
+        _configuration = configuration        
         _rating = State(initialValue: rating)
     }
     
@@ -60,9 +63,7 @@ public struct StarRating: View {
             .aspectRatio(contentMode: .fit)
     }
     
-    public var ratingChanged: (Double) -> Void = {
-        print($0)
-    }
+
     
     private static func halfAStar(width: CGFloat, stars: Int) -> CGFloat {
         width / CGFloat(stars * 2)
@@ -73,11 +74,12 @@ public struct StarRating: View {
             let halfAStar = Self.halfAStar(width: geo.size.width, stars: configuration.numberOfStars)
             
             let drag = DragGesture(minimumDistance: 0).onChanged { value in
+                guard let onRatingChanged = onRatingChanged else { return }
                 
                 guard value.location.x > (halfAStar * CGFloat(configuration.minRating) * 2) else {
                     if rating != configuration.minRating {
                         rating = configuration.minRating
-                        ratingChanged(rating)
+                        onRatingChanged(rating)
                     }
                     return
                 }
@@ -86,7 +88,7 @@ public struct StarRating: View {
                     let maxRating = Double(configuration.numberOfStars)
                     if rating != maxRating {
                         rating = maxRating
-                        ratingChanged(rating)
+                        onRatingChanged(rating)
                     }
                     
                     return
@@ -102,7 +104,7 @@ public struct StarRating: View {
                 
                 if roundedNewRating != rating {
                     rating = roundedNewRating
-                    ratingChanged(rating)
+                    onRatingChanged(rating)
                 }
             }
             

@@ -1,18 +1,18 @@
 import SwiftUI
 
-public struct StarRatingConfiguration {
-    public let spacing: CGFloat
-    public let numberOfStars: Int
-    public let stepType: StarRating.StepType
-    public let minRating: Double
-    public let borderWidth: CGFloat
-    public let borderColor: Color
-    public let shadowRadius: CGFloat
-    public let shadowColor: Color
-    public let fillColor1: Color
-    public let fillColor2: Color
-    public let starVertices: Int
-    public let starWeight: CGFloat
+public class StarRatingConfiguration: ObservableObject {
+    @Published public var spacing: CGFloat
+    @Published public var numberOfStars: Int
+    @Published public var stepType: StarRating.StepType
+    @Published public var minRating: Double
+    @Published public var borderWidth: CGFloat
+    @Published public var borderColor: Color
+    @Published public var shadowRadius: CGFloat
+    @Published public var shadowColor: Color
+    @Published public var fillColor1: Color
+    @Published public var fillColor2: Color
+    @Published public var starVertices: Int
+    @Published public var starWeight: CGFloat
     
     public init (
         spacing: CGFloat = 12,

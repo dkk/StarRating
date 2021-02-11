@@ -1,15 +1,20 @@
 import SwiftUI
 import StarRating
 
+extension Color {
+    struct Example {
+        static var border: Color {
+            Color(.init { $0.userInterfaceStyle == .light ? .black : .white })
+        }
+
+    }
+}
+
 struct ContentView: View {
     @Environment(\.colorScheme) var colorScheme
     
     var shadowWhite: Double {
         colorScheme == .light ? 0 : 1
-    }
-    
-    var customBorderColor: Color {
-        colorScheme == .light ? .black : .white
     }
     
     var bigStar: some View {
@@ -34,19 +39,35 @@ struct ContentView: View {
         }
     }
     
-    var customStarRatingConfiguration: StarRatingConfiguration {
-        StarRatingConfiguration(spacing: 8, numberOfStars: 7, stepType: .full, minRating: 1, borderWidth: 1, borderColor: customBorderColor, shadowRadius: 0, fillColor1: .pink, fillColor2: .blue, starVertices: 6, starWeight: 0.6)
-    }
+    @State var customConfig = StarRatingConfiguration(spacing: 8,
+                                                      numberOfStars: 10,
+                                                      stepType: .full,
+                                                      minRating: 2,
+                                                      borderWidth: 1,
+                                                      borderColor: Color.Example.border,
+                                                      shadowRadius: 0,
+                                                      fillColor1: .pink,
+                                                      fillColor2: .blue,
+                                                      starVertices: 6,
+                                                      starWeight: 0.6)
     
     var body: some View {
         VStack {
             bigStar
-                        
-            StarRating(rating: 3.7)
+                   
+            // standard
+            StarRating(rating: 3.7, onRatingChanged: { print($0) })
                 .frame(width: 300, height: 50)
             
-            StarRating(rating: 3.7, configuration: customStarRatingConfiguration)
-                .frame(width: 200, height: 50)
+            // custom & with live update
+            StarRating(rating: 3.7, configuration: $customConfig) { newRating in
+                if newRating == 0 {
+                    customConfig.starVertices = Int(newRating)
+                } else {
+                    customConfig.starVertices = Int(newRating)
+                }
+                
+            }
         }
     }
 }
