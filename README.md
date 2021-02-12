@@ -2,7 +2,7 @@
 
 ![Example](./example.png?raw=true) ![Example Dark](./example_dark.png?raw=true)
 
-This is a customizable star rating element written specifically for SwiftUI. It shows a star rating and handles user input.
+This is a customizable star rating control written specifically for SwiftUI. It shows a star rating and handles user input.
 It also contains a star Shape with customizable number of vertices and weight.
 
 ## Installation
