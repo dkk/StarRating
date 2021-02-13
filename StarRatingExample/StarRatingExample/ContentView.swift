@@ -30,6 +30,7 @@ struct ContentView: View {
                                                       minRating: 2,
                                                       borderWidth: 1,
                                                       borderColor: Color.Example.border,
+                                                      emptyColor: Color.Example.border.opacity(0.15),
                                                       shadowRadius: 0,
                                                       fillColors: [Color].random,
                                                       starVertices: 6,

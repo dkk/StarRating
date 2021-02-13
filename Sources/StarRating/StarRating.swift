@@ -57,6 +57,12 @@ public struct StarRating: View {
             .shadow(color: configuration.shadowColor, radius: configuration.shadowRadius)
     }
     
+    private func starBackground() -> some View {
+        Star(vertices: configuration.starVertices, weight: configuration.starWeight)
+            .fill(configuration.emptyColor)
+            .aspectRatio(contentMode: .fit)
+    }
+    
     private func filledStar(filling: StarFilling) -> some View {
         let trimStart: CGFloat
         switch filling {
@@ -128,6 +134,7 @@ public struct StarRating: View {
                 ForEach((0 ..< configuration.numberOfStars), id: \.self) { index in
                     ZStack {
                         starBorder()
+                            .background(starBackground())
                         
                         filledStar(filling: starFilling(rating: rating - Double(index)))
                             .overlay(starBorder())

@@ -8,6 +8,7 @@ public class StarRatingConfiguration: ObservableObject {
     @Published public var minRating: Double
     @Published public var borderWidth: CGFloat
     @Published public var borderColor: Color
+    @Published public var emptyColor: Color
     @Published public var shadowRadius: CGFloat
     @Published public var shadowColor: Color
     @Published public var fillColors: [Color]
@@ -21,6 +22,7 @@ public class StarRatingConfiguration: ObservableObject {
     ///     - minRating: the minimal rating allowed
     ///     - borderWidth: the width of the border of the stars
     ///     - borderColor: the color of the border
+    ///     - emptyColor: empty star color
     ///     - shadowRadius: the radius of the star border shadow
     ///     - shadowColor: the color of the star border shadow
     ///     - fillColors: the colors of the gradient used to fill the stars
@@ -35,6 +37,7 @@ public class StarRatingConfiguration: ObservableObject {
         minRating: Double = 0,
         borderWidth: CGFloat = 2,
         borderColor: Color = .white,
+        emptyColor: Color = .clear,
         shadowRadius: CGFloat = 4,
         shadowColor: Color = Color.StarRating.defaultShadow,
         fillColors: [Color] = [.yellow, .orange],
@@ -46,6 +49,7 @@ public class StarRatingConfiguration: ObservableObject {
         self.stepType = stepType
         self.borderWidth = borderWidth
         self.borderColor = borderColor
+        self.emptyColor = emptyColor
         self.shadowRadius = shadowRadius
         self.shadowColor = shadowColor
         self.fillColors = fillColors
