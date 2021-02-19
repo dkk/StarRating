@@ -141,7 +141,8 @@ public struct StarRating: View {
                     }
                 }
             }
-            .padding([.leading, .trailing], halfAStar)
+            .padding(.horizontal, halfAStar)
+            .contentShape(Rectangle())
             .gesture(drag)
         }
     }
