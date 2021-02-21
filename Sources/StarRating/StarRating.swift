@@ -40,8 +40,11 @@ public struct StarRating: View {
     ) {
         self.onRatingChanged = onRatingChanged
         
-        _configuration = configuration        
-        _rating = State(initialValue: initialRating)
+        _configuration = configuration
+        let normalizedRating = StarRating.normalizedRating(rating: initialRating,
+                                                           numberOfStars: configuration.wrappedValue.numberOfStars,
+                                                           stepType: configuration.wrappedValue.stepType)
+        _rating = State(initialValue: normalizedRating)
     }
     
     private var starBorder: some View {

@@ -16,7 +16,7 @@ Requirements iOS 13+
 
 ### Swift Package
 ```swift
-.package(url: "https://github.com/dkk/StarRating", .upToNextMajor(from: "1.1.2"))
+.package(url: "https://github.com/dkk/StarRating", .upToNextMajor(from: "1.1.3"))
 ```
 
 ## Usage
