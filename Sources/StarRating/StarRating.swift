@@ -4,8 +4,8 @@ import SwiftUI
 public struct StarRating: View {
     /// clips the rating to the allowed interval and rounds it
     /// depending on the stepType
-    public static func normalizedRating(rating: Double, numberOfStars: Int, stepType: StepType) -> Double {
-        let ratingInInterval = min(max(rating, 0), Double(numberOfStars))
+    public static func normalizedRating(rating: Double, minRating: Double, numberOfStars: Int, stepType: StepType) -> Double {
+        let ratingInInterval = min(max(rating, minRating), Double(numberOfStars))
         switch stepType {
         case .half: return round(ratingInInterval * 2) / 2
         case .full: return round(ratingInInterval)
@@ -42,6 +42,7 @@ public struct StarRating: View {
         
         _configuration = configuration
         let normalizedRating = StarRating.normalizedRating(rating: initialRating,
+                                                           minRating: configuration.wrappedValue.minRating,
                                                            numberOfStars: configuration.wrappedValue.numberOfStars,
                                                            stepType: configuration.wrappedValue.stepType)
         _rating = State(initialValue: normalizedRating)
@@ -70,47 +71,46 @@ public struct StarRating: View {
             .aspectRatio(contentMode: .fit)
     }
     
-    private static func halfAStar(width: CGFloat, stars: Int) -> CGFloat {
-        return width / CGFloat(stars * 2)
-    }
-    
-    private func updateRatingIfNeeded(width: CGFloat, xLocation: CGFloat) {
+    private func updateRatingIfNeeded(width: CGFloat, marginSize: CGFloat, xLocation: CGFloat) {
         guard let onRatingChanged = onRatingChanged else { return }
-        let halfAStar = Self.halfAStar(width: width, stars: configuration.numberOfStars)
         
-        guard xLocation > (halfAStar * CGFloat(configuration.minRating) * 2) else {
-            if rating != configuration.minRating {
-                rating = configuration.minRating
-                onRatingChanged(rating)
+        let widthWithoutMargin = width - marginSize * 2
+        let numberOfSpaces = CGFloat(configuration.numberOfStars - 1)
+        let starWidth = (widthWithoutMargin - configuration.spacing * numberOfSpaces) / CGFloat(configuration.numberOfStars)
+        
+        guard starWidth > 0 else { return }
+        
+        var newRating: CGFloat?
+        var minLoc = marginSize
+        var idx = 0
+        repeat {
+            let lowBound = CGFloat(idx)
+            let loc = xLocation - minLoc
+            if loc <= starWidth {
+                let percentOfStar = max(loc, 0) / starWidth
+                newRating = lowBound + percentOfStar
+            } else {
+                minLoc += starWidth + configuration.spacing
+                idx += 1
+                
+                if idx >= configuration.numberOfStars {
+                    newRating = CGFloat(configuration.numberOfStars)
+                }
             }
-            return
-        }
+        } while (newRating == nil)
         
-        guard xLocation < width - halfAStar else {
-            let maxRating = Double(configuration.numberOfStars)
-            if rating != maxRating {
-                rating = maxRating
-                onRatingChanged(rating)
-            }
-            return
-        }
+        let normalizedRating = Self.normalizedRating(rating: Double(newRating!),
+                                                     minRating: configuration.minRating,
+                                                     numberOfStars: configuration.numberOfStars,
+                                                     stepType: configuration.stepType)
         
-        let newRating = Double(CGFloat(configuration.numberOfStars) * (xLocation - halfAStar) / (width - halfAStar * 2))
-        
-        let roundedNewRating: Double
-        switch configuration.stepType{
-        case .half: roundedNewRating = round(newRating * 2.0) / 2.0
-        case .full: roundedNewRating = round(newRating)
-        case .exact: roundedNewRating = newRating
-        }
-        
-        if roundedNewRating != rating {
-            rating = roundedNewRating
+        if normalizedRating != rating {
+            rating = normalizedRating
             onRatingChanged(rating)
         }
     }
     
-    func ratingWidth(fullWidth: CGFloat, horizontalPadding: CGFloat) -> CGFloat {
+    private func ratingWidth(fullWidth: CGFloat, horizontalPadding: CGFloat) -> CGFloat {
         let widthWithoutMargin = fullWidth - horizontalPadding * 2
         let numberOfSpaces = CGFloat(configuration.numberOfStars - 1)
         let starWidth = (widthWithoutMargin - configuration.spacing * numberOfSpaces) / CGFloat(configuration.numberOfStars)
@@ -125,7 +125,9 @@ public struct StarRating: View {
                                         horizontalPadding: horizontalPadding)
             
             let drag = DragGesture(minimumDistance: 0).onChanged { value in
-                updateRatingIfNeeded(width: geo.size.width, xLocation: value.location.x)
+                updateRatingIfNeeded(width: geo.size.width,
+                                     marginSize: horizontalPadding,
+                                     xLocation: value.location.x)
             }
             
             ZStack {

@@ -55,6 +55,9 @@ public class StarRatingConfiguration: ObservableObject {
         self.fillColors = fillColors
         self.starVertices = starVertices
         self.starWeight = starWeight
-        self.minRating = StarRating.normalizedRating(rating: minRating, numberOfStars: numberOfStars, stepType: stepType)
+        self.minRating = StarRating.normalizedRating(rating: minRating,
+                                                     minRating: 0,
+                                                     numberOfStars: numberOfStars,
+                                                     stepType: stepType)
     }
 }

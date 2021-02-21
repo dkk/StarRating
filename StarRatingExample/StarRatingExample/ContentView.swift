@@ -26,7 +26,7 @@ struct ContentView: View {
     
     @State var customConfig = StarRatingConfiguration(spacing: 8,
                                                       numberOfStars: 10,
-                                                      stepType: .full,
+                                                      stepType: .exact,
                                                       minRating: 2,
                                                       borderWidth: 1,
                                                       borderColor: Color.Example.border,
@@ -50,6 +50,7 @@ struct ContentView: View {
             StarRating(initialRating: 2.0, configuration: $customConfig) { newRating in
                 customConfig.starVertices = Int(newRating)
                 customConfig.fillColors = [Color].random
+                print(newRating)
             }
             
             Spacer()
