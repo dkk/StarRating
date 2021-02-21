@@ -44,6 +44,7 @@ struct ContentView: View {
             // Example of using StarRating with default configuration
             StarRating(initialRating: 3.7, onRatingChanged: { print($0) })
                 .frame(width: 300, height: 50)
+                .animation(.linear)
             
             // Example of using StarRating with custom configuration & with live updates
             StarRating(initialRating: 2.0, configuration: $customConfig) { newRating in

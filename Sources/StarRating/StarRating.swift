@@ -2,12 +2,19 @@ import SwiftUI
 
 /// A customizable star rating element It shows a star rating and handles user input.
 public struct StarRating: View {
-    public enum StepType {
-        case full, half
+    /// clips the rating to the allowed interval and rounds it
+    /// depending on the stepType
+    public static func normalizedRating(rating: Double, numberOfStars: Int, stepType: StepType) -> Double {
+        let ratingInInterval = min(max(rating, 0), Double(numberOfStars))
+        switch stepType {
+        case .half: return round(ratingInInterval * 2) / 2
+        case .full: return round(ratingInInterval)
+        case .exact: return ratingInInterval
+        }
     }
     
-    private enum StarFilling {
-        case empty, half, full
+    public enum StepType {
+        case full, half, exact
     }
     
     /// The configuration of the StarRating control.
@@ -37,42 +44,21 @@ public struct StarRating: View {
         _rating = State(initialValue: initialRating)
     }
     
-    private func starFilling(rating: Double) -> StarFilling {
-        if rating <= 0 { return .empty }
-        
-        switch configuration.stepType {
-        case .full:
-            return rating >= 1 ? .full : .empty
-        case .half:
-            if rating < 0.5 { return .empty }
-            if rating < 1 { return .half}
-            return .full
-        }
-    }
-    
-    private func starBorder() -> some View {
+    private var starBorder: some View {
         Star(vertices: configuration.starVertices, weight: configuration.starWeight)
             .stroke(configuration.borderColor, lineWidth: configuration.borderWidth)
             .aspectRatio(contentMode: .fit)
-            .shadow(color: configuration.shadowColor, radius: configuration.shadowRadius)
     }
     
-    private func starBackground() -> some View {
+    private var starBackground: some View {
         Star(vertices: configuration.starVertices, weight: configuration.starWeight)
             .fill(configuration.emptyColor)
             .aspectRatio(contentMode: .fit)
     }
     
-    private func filledStar(filling: StarFilling) -> some View {
-        let trimStart: CGFloat
-        switch filling {
-        case .empty: trimStart = 1.0
-        case .half: trimStart = 0.5
-        case .full: trimStart = 0.0
-        }
-        
-        return Star(vertices: configuration.starVertices, weight: configuration.starWeight)
-            .trim(from: trimStart, to: 1.0)
+    private var starFilling: some View {
+        return Star(vertices: configuration.starVertices,
+                    weight: configuration.starWeight)
             .fill(LinearGradient(
                 gradient: .init(colors: configuration.fillColors),
                 startPoint: .init(x: 0, y: 0),
@@ -81,10 +67,8 @@ public struct StarRating: View {
             .aspectRatio(contentMode: .fit)
     }
     
-    
-    
     private static func halfAStar(width: CGFloat, stars: Int) -> CGFloat {
-        width / CGFloat(stars * 2)
+        return width / CGFloat(stars * 2)
     }
     
     private func updateRatingIfNeeded(width: CGFloat, xLocation: CGFloat) {
@@ -113,7 +97,8 @@ public struct StarRating: View {
         let roundedNewRating: Double
         switch configuration.stepType{
         case .half: roundedNewRating = round(newRating * 2.0) / 2.0
-        case.full: roundedNewRating = round(newRating)
+        case .full: roundedNewRating = round(newRating)
+        case .exact: roundedNewRating = newRating
         }
         
         if roundedNewRating != rating {
@@ -122,26 +107,45 @@ public struct StarRating: View {
         }
     }
     
+    func ratingWidth(fullWidth: CGFloat, horizontalPadding: CGFloat) -> CGFloat {
+        let widthWithoutMargin = fullWidth - horizontalPadding * 2
+        let numberOfSpaces = CGFloat(configuration.numberOfStars - 1)
+        let starWidth = (widthWithoutMargin - configuration.spacing * numberOfSpaces) / CGFloat(configuration.numberOfStars)
+        return CGFloat(rating) * starWidth + floor(CGFloat(rating)) * configuration.spacing
+    }
+    
     public var body: some View {
         GeometryReader { geo in
-            let halfAStar = Self.halfAStar(width: geo.size.width, stars: configuration.numberOfStars)
+            let horizontalPadding = geo.size.width / CGFloat(configuration.numberOfStars * 2)
+            
+            let maskWidth = ratingWidth(fullWidth:geo.size.width,
+                                        horizontalPadding: horizontalPadding)
             
             let drag = DragGesture(minimumDistance: 0).onChanged { value in
                 updateRatingIfNeeded(width: geo.size.width, xLocation: value.location.x)
             }
             
-            HStack(spacing: configuration.spacing) {
-                ForEach((0 ..< configuration.numberOfStars), id: \.self) { index in
-                    ZStack {
-                        starBorder()
-                            .background(starBackground())
+            ZStack {
+                HStack(spacing: configuration.spacing) {
+                    ForEach((0 ..< configuration.numberOfStars), id: \.self) { index in
                         
-                        filledStar(filling: starFilling(rating: rating - Double(index)))
-                            .overlay(starBorder())
+                        starBorder
+                            .shadow(color: configuration.shadowColor, radius: configuration.shadowRadius)
+                            .background(starBackground)
                     }
                 }
+                
+                HStack(spacing: configuration.spacing) {
+                    ForEach((0 ..< configuration.numberOfStars), id: \.self) { index in
+                        
+                        starFilling
+                            .mask(Rectangle().size(width: maskWidth, height: geo.size.height))
+                            .overlay(starBorder)
+                    }
+                }
+                .mask(Rectangle().size(width: maskWidth, height: geo.size.height))
             }
-            .padding(.horizontal, halfAStar)
+            .padding(.horizontal, horizontalPadding)
             .contentShape(Rectangle())
             .gesture(drag)
         }

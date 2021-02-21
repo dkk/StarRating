@@ -55,14 +55,6 @@ public class StarRatingConfiguration: ObservableObject {
         self.fillColors = fillColors
         self.starVertices = starVertices
         self.starWeight = starWeight
-        
-        // allowed `minRating` values depend on `stepType` and `numberOfStars`. `minRating`
-        // must be within [0, numberOfStars]. If `stepType == .half` it mult be multiple of 0.5.
-        // If `stepType == .full` it mult be multiple of 1.
-        let minRatingInInterval = min(max(minRating, 0), Double(numberOfStars))
-        switch stepType {
-        case .half: self.minRating = floor(minRatingInInterval * 2) / 2
-        case .full: self.minRating = floor(minRatingInInterval)
-        }
+        self.minRating = StarRating.normalizedRating(rating: minRating, numberOfStars: numberOfStars, stepType: stepType)
     }
 }
