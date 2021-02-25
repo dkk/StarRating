@@ -41,34 +41,45 @@ public struct StarRating: View {
         self.onRatingChanged = onRatingChanged
         
         _configuration = configuration
-        let normalizedRating = StarRating.normalizedRating(rating: initialRating,
-                                                           minRating: configuration.wrappedValue.minRating,
-                                                           numberOfStars: configuration.wrappedValue.numberOfStars,
-                                                           stepType: configuration.wrappedValue.stepType)
+        let normalizedRating = StarRating.normalizedRating(
+            rating: initialRating,
+            minRating: configuration.wrappedValue.minRating,
+            numberOfStars: configuration.wrappedValue.numberOfStars,
+            stepType: configuration.wrappedValue.stepType
+        )
         _rating = State(initialValue: normalizedRating)
     }
     
     private var starBorder: some View {
-        Star(vertices: configuration.starVertices, weight: configuration.starWeight)
-            .stroke(configuration.borderColor, lineWidth: configuration.borderWidth)
-            .aspectRatio(contentMode: .fit)
+        Star(
+            vertices: configuration.starVertices,
+            weight: configuration.starWeight
+        )
+        .stroke(configuration.borderColor,
+                lineWidth: configuration.borderWidth)
+        .aspectRatio(contentMode: .fit)
     }
     
     private var starBackground: some View {
-        Star(vertices: configuration.starVertices, weight: configuration.starWeight)
-            .fill(configuration.emptyColor)
-            .aspectRatio(contentMode: .fit)
+        Star(
+            vertices: configuration.starVertices,
+            weight: configuration.starWeight
+        )
+        .fill(configuration.emptyColor)
+        .aspectRatio(contentMode: .fit)
     }
     
     private var starFilling: some View {
-        return Star(vertices: configuration.starVertices,
-                    weight: configuration.starWeight)
-            .fill(LinearGradient(
-                gradient: .init(colors: configuration.fillColors),
-                startPoint: .init(x: 0, y: 0),
-                endPoint: .init(x: 1, y: 1)
-            ))
-            .aspectRatio(contentMode: .fit)
+        Star(
+            vertices: configuration.starVertices,
+            weight: configuration.starWeight
+        )
+        .fill(LinearGradient(
+            gradient: .init(colors: configuration.fillColors),
+            startPoint: .init(x: 0, y: 0),
+            endPoint: .init(x: 1, y: 1)
+        ))
+        .aspectRatio(contentMode: .fit)
     }
     
     private func updateRatingIfNeeded(width: CGFloat, marginSize: CGFloat, xLocation: CGFloat) {
@@ -114,12 +125,13 @@ public struct StarRating: View {
         let widthWithoutMargin = fullWidth - horizontalPadding * 2
         let numberOfSpaces = CGFloat(configuration.numberOfStars - 1)
         let starWidth = (widthWithoutMargin - configuration.spacing * numberOfSpaces) / CGFloat(configuration.numberOfStars)
+        
         return CGFloat(rating) * starWidth + floor(CGFloat(rating)) * configuration.spacing
     }
     
     public var body: some View {
         GeometryReader { geo in
-            let horizontalPadding = geo.size.width / CGFloat(configuration.numberOfStars * 2)
+            let horizontalPadding = geo.size.width / CGFloat(configuration.numberOfStars * 2 + 2)
             
             let maskWidth = ratingWidth(fullWidth:geo.size.width,
                                         horizontalPadding: horizontalPadding)
