@@ -67,6 +67,11 @@ Use `Star` the same way as you would use standard SwiftUI Shapes, such as `Recta
 Star(vertices: 5, weight: 0.45)
 ```
 
-## License
+## Contribute
+You can contribute to this project by helping me solve any [reported issues or feature requests](https://github.com/dkk/WrappingHStack/issues) and creating a pull request.
 
+## Support
+If you just want to say thanks, you could [buy me a coffee ☕️](https://www.buymeacoffee.com/kloeck).
+
+## License
 StarRating is released under the [MIT License](LICENSE).
